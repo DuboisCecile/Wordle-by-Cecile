@@ -32,6 +32,7 @@ module.exports = {
   rules: {
     'no-unused-vars': ['error', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
     'no-console': 'warn', // Change to 'error' if you want to disallow console.log
-    'react/react-in-jsx-scope': 'off' // React is always in scope with Vite
+    'react/react-in-jsx-scope': 'off' // React is always in scope with Vite, we don't need to import it.
+    // 'react/prop-types': 'off', // Disable prop-types 
   }
 };

@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.wrong {
+  /* --tw-border-opacity: 1;
+    border-color: rgb(75 85 99 / var(--tw-border-opacity)); */
+  background-color: #1f2937;
+}
+
+.correct {
+  text-shadow: 0 0 0.5rem #00000050;
+  /* --tw-border-opacity: 1;
+    border-color: rgb(234 179 8 / var(--tw-border-opacity)); */
+  background-color: #ca8a04;
+}
+
+.perfect {
+  text-shadow: 0 0 0.5rem #00000050;
+  /* --tw-border-opacity: 1;
+    border-color: rgb(34 197 94 / var(--tw-border-opacity));
+    --tw-bg-opacity: 1; */
+  background-color: #16a34a;
+}
