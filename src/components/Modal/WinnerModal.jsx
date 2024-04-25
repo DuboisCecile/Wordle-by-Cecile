@@ -2,7 +2,7 @@ import Modal from './Modal';
 
 export default function WinnerModal({ handleRestart, chosenWord, tries, setWinOrLose }) {
   return (
-    <Modal open={open} onClose={() => setWinOrLose('')} bgImg="url('public/images/confettis.png')">
+    <Modal open={open} onClose={() => setWinOrLose('')} bgImg="url('/images/confettis.png')">
       <div className="flex w-96 flex-col items-center gap-5 bg-white bg-opacity-90 p-10 text-center">
         <div className="text-xl font-bold">
           Félicitations ! Vous avez trouvé le mot en {tries.row} coup{tries.row > 1 && 's'} !
