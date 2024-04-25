@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import Board from './components/Board/Board';
 import KeyBoard from './components/Keyboard/KeyBoard';
-import { WORDS } from './assets/words';
+import { WORDS, KEYS } from './assets/words';
 import { Particles, initParticlesEngine } from '@tsparticles/react';
 import { loadFireworksPreset } from '@tsparticles/preset-fireworks';
 import MissingCharactersModal from './components/Modal/MissingCharactersModal';
@@ -20,8 +20,7 @@ function App() {
   useEffect(() => {
     initParticlesEngine(async (engine) => {
       await loadFireworksPreset(engine);
-    }).then((a) => {
-      console.log(a);
+    }).then(() => {
       setInit(true);
     });
   }, []);
@@ -74,19 +73,21 @@ function App() {
           newBoard[tries.row][tries.column - 1] = null;
           return newBoard;
         });
-      } else if (value === 'Enter') {
+        return;
+      }
+      if (value === 'Enter') {
         if (tries.column < 5) {
           setMissing(true);
         }
-      } else {
-        if (tries.column > 4) return;
-        setBoard((prevBoard) => {
-          const newBoard = [...prevBoard];
-          newBoard[tries.row][tries.column] = { value: value.toUpperCase() };
-          return newBoard;
-        });
-        setTries((prevTries) => ({ column: prevTries.column + 1, row: prevTries.row }));
+        return;
       }
+      if (tries.column > 4 || !KEYS.map((key) => key.id).includes(value.toUpperCase())) return;
+      setBoard((prevBoard) => {
+        const newBoard = [...prevBoard];
+        newBoard[tries.row][tries.column] = { value: value.toUpperCase() };
+        return newBoard;
+      });
+      setTries((prevTries) => ({ column: prevTries.column + 1, row: prevTries.row }));
     },
     [tries]
   );
@@ -153,7 +154,7 @@ function App() {
       <div className="flex w-full flex-col items-center gap-2 bg-slate-700">
         {/* h-screen */}
         <Board board={board} />
-        <KeyBoard handleKey={handleKey} />
+        <KeyBoard board={board} handleKey={handleKey} />
       </div>
       {init && winOrLose === 'win' && <Particles id="tsparticles" options={particlesOptions} />}
       {['win', 'lose'].includes(winOrLose) && (

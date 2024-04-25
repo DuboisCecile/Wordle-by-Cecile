@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-export default function KeyboardSquare({ id, children, handleKey }) {
+export default function KeyboardSquare({ id, children, handleKey, extraClass }) {
   const keyRef = useRef(null);
 
   const onClick = () => {
@@ -10,7 +10,7 @@ export default function KeyboardSquare({ id, children, handleKey }) {
 
   return (
     <button
-      className="group relative inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-gray-800 font-bold tracking-tighter text-white"
+      className={`group relative inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-gray-800 font-bold tracking-tighter text-white ${extraClass}`}
       onClick={onClick}
       ref={keyRef}
       id={id}
