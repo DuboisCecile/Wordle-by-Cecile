@@ -20,13 +20,16 @@ function App() {
   );
 
   useEffect(() => {
-    console.log('Mot choisi (pour tests !) : ', chosenWord.join(''));
     initParticlesEngine(async (engine) => {
       await loadFireworksPreset(engine);
     }).then(() => {
       setInit(true);
     });
   }, []);
+
+  useEffect(() => {
+    console.log('Mot choisi (pour tests !) : ', chosenWord.join(''));
+  }, [chosenWord]);
 
   const particlesOptions = {
     preset: 'fireworks',

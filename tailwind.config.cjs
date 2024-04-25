@@ -4,6 +4,5 @@ module.exports = {
   theme: {
     extend: {}
   },
-  plugins: [],
-  safelist: ["bg-[url('public/images/background.jpg')]", 'bg-yellow-500', 'border-yellow-800']
+  plugins: []
 };
