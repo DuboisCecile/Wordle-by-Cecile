@@ -9,8 +9,6 @@ import MissingCharactersModal from './components/Modal/MissingCharactersModal';
 import WinnerModal from './components/Modal/WinnerModal';
 import GameOverModal from './components/Modal/GameOverModal';
 
-// const chosenWord = WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase());
-
 function App() {
   const [board, setBoard] = useState([...Array(6)].map(() => [...Array(5)]));
   const [tries, setTries] = useState({ row: 0, column: 0 });
@@ -21,9 +19,8 @@ function App() {
     WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase())
   );
 
-  console.log('Mot choisi (pour tests !) : ', chosenWord.join(''));
-
   useEffect(() => {
+    console.log('Mot choisi (pour tests !) : ', chosenWord.join(''));
     initParticlesEngine(async (engine) => {
       await loadFireworksPreset(engine);
     }).then(() => {
