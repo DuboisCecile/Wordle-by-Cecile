@@ -1,3 +1,4 @@
+import XMark from '../../../public/images/Xmark.svg';
 export default function Modal({ open, onClose, children, bgClass }) {
   return (
     // backdrop
@@ -16,7 +17,7 @@ export default function Modal({ open, onClose, children, bgClass }) {
           onClick={onClose}
           className="absolute right-7 top-7 rounded-lg bg-white p-1 text-gray-400 hover:bg-gray-50 hover:text-gray-600"
         >
-          <img src="../../../public/images/Xmark.svg" alt="closing X" className="w-6" />
+          <img src={XMark} alt="closing X" className="w-6" />
         </button>
         {children}
       </div>

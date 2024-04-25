@@ -3,7 +3,11 @@ import wantedImg from '../../../public/images/wanted.png';
 
 export default function MissingCharactersModal({ setMissing }) {
   return (
-    <Modal open={open} onClose={() => setMissing(false)} bgClass="bg-[url('public/images/background.jpg')] bg-cover">
+    <Modal
+      open={open}
+      onClose={() => setMissing(false)}
+      bgClass="bg-[url('../../../public/images/background.jpg')] bg-cover"
+    >
       <div className="flex w-96 flex-col items-center gap-5 bg-white bg-opacity-90 p-10 text-center">
         <div className="text-xl font-bold">Oups ! Il semble qu'il manque certains caractères !</div>
         <img src={wantedImg} style={{ width: 200, height: 'auto' }} alt="wanted stamp" />
