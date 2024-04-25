@@ -6,6 +6,8 @@ import { WORDS, KEYS } from './assets/words';
 import { Particles, initParticlesEngine } from '@tsparticles/react';
 import { loadFireworksPreset } from '@tsparticles/preset-fireworks';
 import MissingCharactersModal from './components/Modal/MissingCharactersModal';
+import WinnerModal from './components/Modal/WinnerModal';
+import GameOverModal from './components/Modal/GameOverModal';
 
 // const chosenWord = WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase());
 
@@ -144,20 +146,12 @@ function App() {
     }
   }, [tries, board]);
 
-  useEffect(() => {
-    if (winOrLose === 'win') {
-      setBoard(() => [...Array(6)].map(() => [...Array(5)]));
-    } else if (winOrLose === 'lose') {
-      alert('You Lose!');
-      setBoard(() => [...Array(6)].map(() => [...Array(5)]));
-    }
-  }, [winOrLose]);
-
   const handleRestart = () => {
     setWinOrLose('');
     setInit(false);
     setTries({ row: 0, column: 0 });
     setChosenWord(WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase()));
+    setBoard(() => [...Array(6)].map(() => [...Array(5)]));
   };
 
   return (
@@ -168,16 +162,10 @@ function App() {
         <KeyBoard board={board} handleKey={handleKey} />
       </div>
       {init && winOrLose === 'win' ? <Particles id="tsparticles" options={particlesOptions} /> : null}
-      {['win', 'lose'].includes(winOrLose) && (
-        <div className="flex w-full flex-col items-center gap-2 bg-slate-700">
-          <button
-            className="relative z-10 flex items-center justify-center rounded-md bg-green-800 p-2 font-bold text-white"
-            onClick={handleRestart}
-          >
-            Start again
-          </button>
-        </div>
+      {winOrLose === 'win' && (
+        <WinnerModal handleRestart={handleRestart} tries={tries} chosenWord={chosenWord} setWinOrLose={setWinOrLose} />
       )}
+      {winOrLose === 'lose' && <GameOverModal handleRestart={handleRestart} setWinOrLose={setWinOrLose} />}
       {missing && <MissingCharactersModal setMissing={setMissing} />}
     </div>
   );
