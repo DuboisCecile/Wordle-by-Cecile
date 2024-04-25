@@ -5,6 +5,7 @@ import KeyBoard from './components/Keyboard/KeyBoard';
 import { WORDS } from './assets/words';
 import { Particles, initParticlesEngine } from '@tsparticles/react';
 import { loadFireworksPreset } from '@tsparticles/preset-fireworks';
+import MissingCharactersModal from './components/Modal/MissingCharactersModal';
 
 const chosenWord = WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase());
 console.log(chosenWord.join(''));
@@ -14,6 +15,7 @@ function App() {
   const [tries, setTries] = useState({ row: 0, column: 0 });
   const [winOrLose, setWinOrLose] = useState('');
   const [init, setInit] = useState(false);
+  const [missing, setMissing] = useState(false);
 
   useEffect(() => {
     initParticlesEngine(async (engine) => {
@@ -74,7 +76,7 @@ function App() {
         });
       } else if (value === 'Enter') {
         if (tries.column < 5) {
-          alert('Vous devez remplir la ligne en entier !'); // faire une modal
+          setMissing(true);
         }
       } else {
         if (tries.column > 4) return;
@@ -147,7 +149,7 @@ function App() {
   }, [winOrLose]);
 
   return (
-    <>
+    <div id="root">
       <div className="flex w-full flex-col items-center gap-2 bg-slate-700">
         {/* h-screen */}
         <Board board={board} />
@@ -167,7 +169,8 @@ function App() {
           </button>
         </div>
       )}
-    </>
+      {missing && <MissingCharactersModal setMissing={setMissing} />}
+    </div>
   );
 }
 
