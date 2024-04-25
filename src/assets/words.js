@@ -50,5 +50,7 @@ export const KEYS = [
   'W',
   'X',
   'Y',
-  'Z'
+  'Z',
+  { key: '⌫', id: 'Backspace' },
+  { key: '↵', id: 'Enter' }
 ];

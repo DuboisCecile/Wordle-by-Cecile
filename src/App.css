@@ -2,10 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* #root {
+  height: 100%;
+  min-height: 100vh;
+} */
+
 .wrong {
   /* --tw-border-opacity: 1;
     border-color: rgb(75 85 99 / var(--tw-border-opacity)); */
-  background-color: #1f2937;
+  background-color: #8a8986;
 }
 
 .correct {

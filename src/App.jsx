@@ -3,6 +3,8 @@ import './App.css';
 import Board from './components/Board/Board';
 import KeyBoard from './components/Keyboard/KeyBoard';
 import { WORDS } from './assets/words';
+import { Particles, initParticlesEngine } from '@tsparticles/react';
+import { loadFireworksPreset } from '@tsparticles/preset-fireworks';
 
 const chosenWord = WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase());
 console.log(chosenWord.join(''));
@@ -11,22 +13,87 @@ function App() {
   const [board, setBoard] = useState([...Array(6)].map(() => [...Array(5)]));
   const [tries, setTries] = useState({ row: 0, column: 0 });
   const [winOrLose, setWinOrLose] = useState('');
+  const [init, setInit] = useState(false);
+
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      await loadFireworksPreset(engine);
+    }).then((a) => {
+      console.log(a);
+      setInit(true);
+    });
+  }, []);
+
+  const particlesOptions = {
+    preset: 'fireworks',
+    emitters: {
+      autoPlay: true,
+      fill: true,
+      life: {
+        wait: false,
+        count: 30,
+        delay: 0.1,
+        duration: 0.1
+      },
+      rate: {
+        quantity: 1,
+        delay: 0.15
+      },
+      shape: {
+        options: {},
+        replace: {
+          color: false,
+          opacity: false
+        },
+        type: 'square'
+      },
+      startCount: 0,
+      size: {
+        mode: 'percent',
+        height: 0,
+        width: 100
+      },
+      direction: 'top',
+      particles: {},
+      position: {
+        x: 50,
+        y: 100
+      }
+    }
+  };
+
+  const handleKey = useCallback(
+    (value) => {
+      if (value === 'Backspace') {
+        if (tries.column === 0) return;
+        setTries((prevTries) => ({ column: prevTries.column - 1, row: prevTries.row }));
+        setBoard((prevBoard) => {
+          const newBoard = [...prevBoard];
+          newBoard[tries.row][tries.column - 1] = null;
+          return newBoard;
+        });
+      } else if (value === 'Enter') {
+        if (tries.column < 5) {
+          alert('Vous devez remplir la ligne en entier !'); // faire une modal
+        }
+      } else {
+        if (tries.column > 4) return;
+        setBoard((prevBoard) => {
+          const newBoard = [...prevBoard];
+          newBoard[tries.row][tries.column] = { value: value.toUpperCase() };
+          return newBoard;
+        });
+        setTries((prevTries) => ({ column: prevTries.column + 1, row: prevTries.row }));
+      }
+    },
+    [tries]
+  );
 
   const handleKeydown = useCallback(
     (event) => {
-      if (tries.column > 4) return;
-      setBoard((prevBoard) => {
-        const newBoard = [...prevBoard];
-        newBoard[tries.row][tries.column] = { value: event.key?.toUpperCase() };
-        return newBoard;
-      });
-      setTries((prevTries) => {
-        const { column, row } = prevTries;
-        const newTries = { column: column + 1, row };
-        return newTries;
-      });
+      handleKey(event.key);
     },
-    [tries]
+    [handleKey]
   );
 
   useEffect(() => {
@@ -72,7 +139,6 @@ function App() {
 
   useEffect(() => {
     if (winOrLose === 'win') {
-      alert('You Win!');
       setBoard(() => [...Array(6)].map(() => [...Array(5)]));
     } else if (winOrLose === 'lose') {
       alert('You Lose!');
@@ -81,11 +147,27 @@ function App() {
   }, [winOrLose]);
 
   return (
-    <div className="flex w-full flex-col items-center gap-2 bg-slate-700">
-      {/* h-screen */}
-      <Board board={board} />
-      <KeyBoard setBoard={setBoard} setTries={setTries} tries={tries} />
-    </div>
+    <>
+      <div className="flex w-full flex-col items-center gap-2 bg-slate-700">
+        {/* h-screen */}
+        <Board board={board} />
+        <KeyBoard handleKey={handleKey} />
+      </div>
+      {init && winOrLose === 'win' && <Particles id="tsparticles" options={particlesOptions} />}
+      {['win', 'lose'].includes(winOrLose) && (
+        <div className="flex w-full flex-col items-center gap-2 bg-slate-700">
+          <button
+            className="relative z-10 flex items-center justify-center rounded-md bg-green-800 p-2 font-bold text-white"
+            onClick={() => {
+              setWinOrLose('');
+              setInit(false);
+            }}
+          >
+            Start again
+          </button>
+        </div>
+      )}
+    </>
   );
 }
 
