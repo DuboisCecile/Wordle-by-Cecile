@@ -22,14 +22,11 @@ function App() {
   console.log('Mot choisi (pour tests !) : ', chosenWord.join(''));
 
   useEffect(() => {
-    // if (!init) {
-    console.log('init', init);
     initParticlesEngine(async (engine) => {
       await loadFireworksPreset(engine);
     }).then(() => {
       setInit(true);
     });
-    // }
   }, []);
 
   const particlesOptions = {
@@ -165,9 +162,8 @@ function App() {
 
   return (
     <div id="root">
-      <div className="flex w-full flex-col items-center gap-2 bg-slate-700">
+      <div className="flex h-screen w-full flex-col items-center gap-2 bg-slate-700">
         <h1 className="text-2xl font-extrabold text-white">Wordle by Cécile</h1>
-        {/* h-screen */}
         <Board board={board} />
         <KeyBoard board={board} handleKey={handleKey} />
       </div>
