@@ -7,8 +7,7 @@ import { Particles, initParticlesEngine } from '@tsparticles/react';
 import { loadFireworksPreset } from '@tsparticles/preset-fireworks';
 import MissingCharactersModal from './components/Modal/MissingCharactersModal';
 
-const chosenWord = WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase());
-console.log(chosenWord.join(''));
+// const chosenWord = WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase());
 
 function App() {
   const [board, setBoard] = useState([...Array(6)].map(() => [...Array(5)]));
@@ -16,7 +15,11 @@ function App() {
   const [winOrLose, setWinOrLose] = useState('');
   const [init, setInit] = useState(false);
   const [missing, setMissing] = useState(false);
+  const [chosenWord, setChosenWord] = useState(
+    WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase())
+  );
 
+  console.log('Mot choisi (pour tests !) : ', chosenWord.join(''));
   useEffect(() => {
     initParticlesEngine(async (engine) => {
       await loadFireworksPreset(engine);
@@ -149,6 +152,13 @@ function App() {
     }
   }, [winOrLose]);
 
+  const handleRestart = () => {
+    setWinOrLose('');
+    setInit(false);
+    setTries({ row: 0, column: 0 });
+    setChosenWord(WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase()));
+  };
+
   return (
     <div id="root">
       <div className="flex w-full flex-col items-center gap-2 bg-slate-700">
@@ -161,10 +171,7 @@ function App() {
         <div className="flex w-full flex-col items-center gap-2 bg-slate-700">
           <button
             className="relative z-10 flex items-center justify-center rounded-md bg-green-800 p-2 font-bold text-white"
-            onClick={() => {
-              setWinOrLose('');
-              setInit(false);
-            }}
+            onClick={handleRestart}
           >
             Start again
           </button>
