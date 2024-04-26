@@ -155,10 +155,10 @@ function App() {
   };
 
   return (
-    <div id="root">
+    <div>
       <div className="flex h-screen w-full flex-col items-center gap-2 bg-slate-700">
         <h1 className="text-2xl font-extrabold text-white">Wordle by Cécile</h1>
-        <Board board={board} />
+        <Board board={board} tries={tries} />
         <KeyBoard board={board} handleKey={handleKey} />
       </div>
       {init && winOrLose === 'win' ? <Particles id="tsparticles" options={particlesOptions} /> : null}

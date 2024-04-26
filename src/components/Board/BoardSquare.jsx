@@ -1,4 +1,4 @@
-export default function BoardSquare({ cell, line, column }) {
+export default function BoardSquare({ cell, line, column, tries }) {
   let currentStatus = '';
   if (cell?.status === 'perfect') {
     currentStatus = 'perfect';
@@ -14,7 +14,11 @@ export default function BoardSquare({ cell, line, column }) {
       id={`cell-${line}-${column}`}
       key={currentStatus}
     >
-      {cell?.value}
+      <div
+        className={`${tries?.row === line && tries?.column === column ? ' h-8 w-6 border-b border-white animate-bounce' : ''} `}
+      >
+        {cell?.value}
+      </div>
     </div>
   );
 }
