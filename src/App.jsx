@@ -21,6 +21,40 @@ function App() {
   );
   const containerRef = useRef(null);
 
+  const handleClickEnter = useCallback(() => {
+    if (tries.column > 4) {
+      const wordToCheck = [...board[tries.row]];
+      for (let i = 0; i < wordToCheck.length; i++) {
+        if (wordToCheck[i].value === chosenWord[i]) {
+          wordToCheck[i].status = 'perfect';
+        } else if (chosenWord.includes(wordToCheck[i].value)) {
+          wordToCheck[i].status = 'correct';
+        } else {
+          wordToCheck[i].status = 'wrong';
+        }
+      }
+
+      const newBoard = [...board];
+      newBoard[tries.row] = [...wordToCheck];
+      setBoard(() => newBoard);
+      const lastTry = tries.row === 5;
+      if (lastTry) setTries({ row: 0, column: 0 });
+      else
+        setTries((prevTries) => {
+          const newTries = { column: 0, row: prevTries.row + 1 };
+          return newTries;
+        });
+
+      if (wordToCheck.map((letter) => letter.value).join('') === chosenWord.join('')) {
+        setWinOrLose('win');
+        return;
+      } else if (lastTry) {
+        setWinOrLose('lose');
+        return;
+      }
+    }
+  }, [tries, board]);
+
   const handleKey = useCallback(
     // can be used either by key press, or by clicking on the keyboard
     (value) => {
@@ -37,7 +71,9 @@ function App() {
       if (value === 'Enter') {
         if (tries.column < 5) {
           setMissing(true);
+          return;
         }
+        handleClickEnter();
         return;
       }
       if (tries.column > 4 || !KEYS.map((key) => key.id).includes(value.toUpperCase())) return;
@@ -79,40 +115,6 @@ function App() {
     };
   }, [handleKeydown]);
 
-  useEffect(() => {
-    if (tries.column > 4) {
-      const wordToCheck = [...board[tries.row]];
-      for (let i = 0; i < wordToCheck.length; i++) {
-        if (wordToCheck[i].value === chosenWord[i]) {
-          wordToCheck[i].status = 'perfect';
-        } else if (chosenWord.includes(wordToCheck[i].value)) {
-          wordToCheck[i].status = 'correct';
-        } else {
-          wordToCheck[i].status = 'wrong';
-        }
-      }
-
-      const newBoard = [...board];
-      newBoard[tries.row] = [...wordToCheck];
-      setBoard(() => newBoard);
-      const lastTry = tries.row === 5;
-      if (lastTry) setTries({ row: 0, column: 0 });
-      else
-        setTries((prevTries) => {
-          const newTries = { column: 0, row: prevTries.row + 1 };
-          return newTries;
-        });
-
-      if (wordToCheck.map((letter) => letter.value).join('') === chosenWord.join('')) {
-        setWinOrLose('win');
-        return;
-      } else if (lastTry) {
-        setWinOrLose('lose');
-        return;
-      }
-    }
-  }, [tries, board]);
-
   const particlesLoaded = useCallback(async (container) => {
     containerRef.current = container;
   }, []);
@@ -125,16 +127,16 @@ function App() {
     setBoard(() => [...Array(6)].map(() => [...Array(5)]));
   };
 
-  const onMissingClose = () => {
+  const onMissingCharactersModalClose = () => {
     setMissing(false);
   };
 
-  const onGameOverClose = () => {
+  const onGameOverModalClose = () => {
     containerRef.current?.destroy();
     setWinOrLose('');
   };
 
-  const onWinnerClose = () => {
+  const onWinnerModalClose = () => {
     containerRef.current?.destroy();
     setWinOrLose('');
   };
@@ -156,11 +158,11 @@ function App() {
           tries={tries}
           chosenWord={chosenWord}
           setWinOrLose={setWinOrLose}
-          onClose={onWinnerClose}
+          onClose={onWinnerModalClose}
         />
       )}
-      {winOrLose === 'lose' && <GameOverModal handleRestart={handleRestart} onClose={onGameOverClose} />}
-      {missing && <MissingCharactersModal onClose={onMissingClose} />}
+      {winOrLose === 'lose' && <GameOverModal handleRestart={handleRestart} onClose={onGameOverModalClose} />}
+      {missing && <MissingCharactersModal onClose={onMissingCharactersModalClose} />}
     </div>
   );
 }
