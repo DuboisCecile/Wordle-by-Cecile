@@ -51,14 +51,6 @@ function App() {
           return;
         }
       }
-
-      // if (wordToCheck.map((letter) => letter.value).join('') === chosenWord.join('')) {
-      //   setWinOrLose('win');
-      //   return;
-      // } else if (tries.row === 5) {
-      //   setWinOrLose('lose');
-      //   return;
-      // }
     }
   }, [tries, board]);
 
@@ -123,6 +115,7 @@ function App() {
 
   const particlesLoaded = useCallback(async (container) => {
     containerRef.current = container;
+    console.log(container);
   }, []);
 
   const handleRestart = () => {
