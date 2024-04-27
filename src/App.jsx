@@ -38,6 +38,11 @@ function App() {
       newBoard[tries.row] = [...wordToCheck];
       setBoard(() => newBoard);
 
+      if (wordToCheck.map((letter) => letter.value).join('') === chosenWord.join('')) {
+        setWinOrLose('win');
+        return;
+      }
+
       if (tries.row === 5) {
         setTries({ row: 0, column: 0 });
         setWinOrLose('lose');
@@ -46,10 +51,6 @@ function App() {
           const newTries = { column: 0, row: prevTries.row + 1 };
           return newTries;
         });
-        if (wordToCheck.map((letter) => letter.value).join('') === chosenWord.join('')) {
-          setWinOrLose('win');
-          return;
-        }
       }
     }
   }, [tries, board]);
