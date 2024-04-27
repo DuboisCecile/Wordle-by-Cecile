@@ -37,21 +37,28 @@ function App() {
       const newBoard = [...board];
       newBoard[tries.row] = [...wordToCheck];
       setBoard(() => newBoard);
-      const lastTry = tries.row === 5;
-      if (lastTry) setTries({ row: 0, column: 0 });
-      else
+
+      if (tries.row === 5) {
+        setTries({ row: 0, column: 0 });
+        setWinOrLose('lose');
+      } else {
         setTries((prevTries) => {
           const newTries = { column: 0, row: prevTries.row + 1 };
           return newTries;
         });
-
-      if (wordToCheck.map((letter) => letter.value).join('') === chosenWord.join('')) {
-        setWinOrLose('win');
-        return;
-      } else if (lastTry) {
-        setWinOrLose('lose');
-        return;
+        if (wordToCheck.map((letter) => letter.value).join('') === chosenWord.join('')) {
+          setWinOrLose('win');
+          return;
+        }
       }
+
+      // if (wordToCheck.map((letter) => letter.value).join('') === chosenWord.join('')) {
+      //   setWinOrLose('win');
+      //   return;
+      // } else if (tries.row === 5) {
+      //   setWinOrLose('lose');
+      //   return;
+      // }
     }
   }, [tries, board]);
 
@@ -69,12 +76,11 @@ function App() {
         return;
       }
       if (value === 'Enter') {
-        if (tries.column < 5) {
+        if (tries.column < 5 && winOrLose === '') {
           setMissing(true);
-          return;
+        } else {
+          handleClickEnter();
         }
-        handleClickEnter();
-        return;
       }
       if (tries.column > 4 || !KEYS.map((key) => key.id).includes(value.toUpperCase())) return;
       setBoard((prevBoard) => {
@@ -148,7 +154,6 @@ function App() {
         <Board board={board} tries={tries} />
         <KeyBoard board={board} handleKey={handleKey} />
       </div>
-      {/* && winOrLose === 'win' */}
       {initParticles && winOrLose === 'win' ? (
         <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={particlesCustomizedOptions} />
       ) : null}
@@ -162,7 +167,7 @@ function App() {
         />
       )}
       {winOrLose === 'lose' && <GameOverModal handleRestart={handleRestart} onClose={onGameOverModalClose} />}
-      {missing && <MissingCharactersModal onClose={onMissingCharactersModalClose} />}
+      {missing && winOrLose === '' && <MissingCharactersModal onClose={onMissingCharactersModalClose} />}
     </div>
   );
 }
