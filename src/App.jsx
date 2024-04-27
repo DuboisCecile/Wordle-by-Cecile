@@ -115,7 +115,6 @@ function App() {
 
   const particlesLoaded = useCallback(async (container) => {
     containerRef.current = container;
-    console.log(container);
   }, []);
 
   const handleRestart = () => {
