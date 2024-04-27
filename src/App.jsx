@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import './App.css';
 import Board from './components/Board/Board';
 import KeyBoard from './components/Keyboard/KeyBoard';
@@ -8,68 +8,21 @@ import { loadFireworksPreset } from '@tsparticles/preset-fireworks';
 import MissingCharactersModal from './components/Modal/MissingCharactersModal';
 import WinnerModal from './components/Modal/WinnerModal';
 import GameOverModal from './components/Modal/GameOverModal';
+import particlesCustomizedOptions from './assets/particlesCustomizedOptions.json';
 
 function App() {
   const [board, setBoard] = useState([...Array(6)].map(() => [...Array(5)]));
   const [tries, setTries] = useState({ row: 0, column: 0 });
   const [winOrLose, setWinOrLose] = useState('');
-  const [init, setInit] = useState(false);
+  const [initParticles, setInitParticles] = useState(false);
   const [missing, setMissing] = useState(false);
   const [chosenWord, setChosenWord] = useState(
     WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase())
   );
-
-  useEffect(() => {
-    initParticlesEngine(async (engine) => {
-      await loadFireworksPreset(engine);
-    }).then(() => {
-      setInit(true);
-    });
-  }, []);
-
-  useEffect(() => {
-    console.log('Mot choisi (pour tests !) : ', chosenWord.join(''));
-  }, [chosenWord]);
-
-  const particlesOptions = {
-    preset: 'fireworks',
-    emitters: {
-      autoPlay: true,
-      fill: true,
-      life: {
-        wait: false,
-        count: 30,
-        delay: 0.1,
-        duration: 0.1
-      },
-      rate: {
-        quantity: 1,
-        delay: 0.15
-      },
-      shape: {
-        options: {},
-        replace: {
-          color: false,
-          opacity: false
-        },
-        type: 'square'
-      },
-      startCount: 0,
-      size: {
-        mode: 'percent',
-        height: 0,
-        width: 100
-      },
-      direction: 'top',
-      particles: {},
-      position: {
-        x: 50,
-        y: 100
-      }
-    }
-  };
+  const containerRef = useRef(null);
 
   const handleKey = useCallback(
+    // can be used either by key press, or by clicking on the keyboard
     (value) => {
       if (value === 'Backspace') {
         if (tries.column === 0) return;
@@ -106,9 +59,23 @@ function App() {
   );
 
   useEffect(() => {
+    // this should be run only once per application lifetime
+    initParticlesEngine(async (engine) => {
+      await loadFireworksPreset(engine);
+    }).then(() => {
+      setInitParticles(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log('Mot choisi (pour tests !) : ', chosenWord.join(''));
+  }, [chosenWord]);
+
+  useEffect(() => {
     window.addEventListener('keydown', handleKeydown);
     return () => {
       window.removeEventListener('keydown', handleKeydown);
+      containerRef.current?.destroy();
     };
   }, [handleKeydown]);
 
@@ -146,12 +113,30 @@ function App() {
     }
   }, [tries, board]);
 
+  const particlesLoaded = useCallback(async (container) => {
+    containerRef.current = container;
+  }, []);
+
   const handleRestart = () => {
+    containerRef.current?.destroy();
     setWinOrLose('');
-    setInit(false);
     setTries({ row: 0, column: 0 });
     setChosenWord(WORDS[Math.floor(Math.random() * WORDS.length)].split('').map((n) => n.toUpperCase()));
     setBoard(() => [...Array(6)].map(() => [...Array(5)]));
+  };
+
+  const onMissingClose = () => {
+    setMissing(false);
+  };
+
+  const onGameOverClose = () => {
+    containerRef.current?.destroy();
+    setWinOrLose('');
+  };
+
+  const onWinnerClose = () => {
+    containerRef.current?.destroy();
+    setWinOrLose('');
   };
 
   return (
@@ -161,12 +146,21 @@ function App() {
         <Board board={board} tries={tries} />
         <KeyBoard board={board} handleKey={handleKey} />
       </div>
-      {init && winOrLose === 'win' ? <Particles id="tsparticles" options={particlesOptions} /> : null}
+      {/* && winOrLose === 'win' */}
+      {initParticles && winOrLose === 'win' ? (
+        <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={particlesCustomizedOptions} />
+      ) : null}
       {winOrLose === 'win' && (
-        <WinnerModal handleRestart={handleRestart} tries={tries} chosenWord={chosenWord} setWinOrLose={setWinOrLose} />
+        <WinnerModal
+          handleRestart={handleRestart}
+          tries={tries}
+          chosenWord={chosenWord}
+          setWinOrLose={setWinOrLose}
+          onClose={onWinnerClose}
+        />
       )}
-      {winOrLose === 'lose' && <GameOverModal handleRestart={handleRestart} setWinOrLose={setWinOrLose} />}
-      {missing && <MissingCharactersModal setMissing={setMissing} />}
+      {winOrLose === 'lose' && <GameOverModal handleRestart={handleRestart} onClose={onGameOverClose} />}
+      {missing && <MissingCharactersModal onClose={onMissingClose} />}
     </div>
   );
 }

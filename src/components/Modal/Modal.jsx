@@ -1,13 +1,11 @@
 import XMark from '../../../public/images/Xmark.svg';
 export default function Modal({ open, onClose, children, bgImg }) {
   return (
-    // backdrop
     <div
       onClick={onClose}
-      className={`fixed inset-0 flex justify-center items-center transition-colors ${open ? 'visible bg-black/65' : 'invisible'}`}
+      className={`fixed inset-0 flex justify-center items-center transition-colors ${open ? 'visible bg-transparent ' : 'invisible'}`}
       aria-hidden="true"
     >
-      {/* modal */}
       <div
         onClick={(e) => e.stopPropagation()}
         style={{ backgroundImage: bgImg }}

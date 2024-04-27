@@ -7,6 +7,12 @@
   min-height: 100vh;
 }
 
+/* #tsparticles canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+} */
 .wrong {
   background-color: #8a8986;
 }

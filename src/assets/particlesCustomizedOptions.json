@@ -1,0 +1,38 @@
+{
+  "preset": "fireworks",
+  "emitters": {
+    "autoPlay": true,
+    "fill": true,
+    "life": {
+      "wait": false,
+      "count": 30,
+      "delay": 0.1,
+      "duration": 0.1
+    },
+    "rate": {
+      "quantity": 1,
+      "delay": 0.15
+    },
+    "shape": {
+      "options": {},
+      "replace": {
+        "color": false,
+        "opacity": false
+      },
+      "type": "square"
+    },
+    "startCount": 0,
+    "size": {
+      "mode": "percent",
+      "height": 0,
+      "width": 100
+    },
+    "direction": "top",
+    "particles": {},
+    "position": {
+      "x": 50,
+      "y": 100
+    },
+    "name": "customEmitter"
+  }
+}
