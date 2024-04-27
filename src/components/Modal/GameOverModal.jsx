@@ -4,7 +4,7 @@ import gameOverImg from '../../../public/images/game_over.png';
 export default function GameOverModal({ handleRestart, onClose }) {
   return (
     <Modal open={open} onClose={onClose}>
-      <div className="flex w-96 flex-col items-center gap-5 bg-white bg-opacity-90 p-10 text-center">
+      <div className="flex w-96 flex-col items-center gap-5 bg-white p-10 text-center">
         <img src={gameOverImg} style={{ width: 200, height: 'auto' }} alt="wanted stamp" />
         <div className="text-xl font-bold">Désolé, vous avez perdu ! Vous avez épuisé vos 6 essais !</div>
         <button

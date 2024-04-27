@@ -1,5 +1,5 @@
 import XMark from '../../../public/images/Xmark.svg';
-export default function Modal({ open, onClose, children, bgImg }) {
+export default function Modal({ open, onClose, children, bgImg = null }) {
   return (
     <div
       onClick={onClose}
@@ -8,8 +8,8 @@ export default function Modal({ open, onClose, children, bgImg }) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        style={{ backgroundImage: bgImg }}
-        className={`bg-cover rounded-xl shadow p-6 transition-all ${open ? 'scale-100 opacity-100' : 'scale-125 opacity-0'}`}
+        style={bgImg ? { backgroundImage: bgImg } : {}}
+        className={`${bgImg ? 'bg-cover' : 'bg-white'} rounded-xl shadow p-6 transition-all ${open ? 'scale-100 opacity-100' : 'scale-125 opacity-0'}`}
         aria-hidden="true"
       >
         <button
